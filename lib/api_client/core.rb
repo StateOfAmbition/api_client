@@ -34,11 +34,7 @@ module Api
           @base_endpoint || Api::Client.base_endpoint
         end
         
-        private 
-
-          def authorization_params
-            {accept: :json, Authorization: "Bearer #{access_token}"}
-          end
+        private
     
           def default_config
             {}
