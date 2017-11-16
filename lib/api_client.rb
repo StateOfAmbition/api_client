@@ -19,7 +19,7 @@ module Api
     end
     
     def self.method_missing(name, *args)
-      @@config.send(name) if @@config.respond_to?(name)
+      config.send(name) if config.respond_to?(name)
     end
     
     extend self
