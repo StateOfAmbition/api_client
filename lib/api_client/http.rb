@@ -37,8 +37,12 @@ module Api
         end
 
         def parse(status, body)
-          data = JSON.parse(body)
-          Response.new(status, Resource.parse(data))
+          begin
+            data = JSON.parse(body)
+            Response.new(status, Resource.parse(data))
+          rescue JSON::ParserError => e
+            body
+          end
         end
         
         def authorization_params
