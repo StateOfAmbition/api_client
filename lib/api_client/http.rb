@@ -3,6 +3,12 @@ module Api
     module Http
       def self.included(base)
 
+        def delete(path)
+          authenticate do
+            request("#{base_endpoint}/#{path}", {}, :delete)
+          end
+        end
+
         def get(path, params={})
           authenticate do
             request("#{base_endpoint}/#{path}", params)
@@ -44,7 +50,7 @@ module Api
             body
           end
         end
-        
+
         def authorization_params
           {accept: 'application/vnd.api+json', Authorization: "Bearer #{access_token}"}
         end
