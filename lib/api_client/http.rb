@@ -30,7 +30,7 @@ module Api
         def request(url='', params = {}, action= :get)
           begin
             puts "[API::Client##{action} Request] url: #{url} params: #{params}"
-            attributes = action.eql?(:get) ? [url, authorization_params] : [url, params, authorization_params]
+            attributes = non_post_method? ? [url, authorization_params] : [url, params, authorization_params]
             response = RestClient.send(action, *attributes)
             parse(response.code, response.body)
           rescue RestClient::ExceptionWithResponse => e
@@ -54,6 +54,11 @@ module Api
         def authorization_params
           {accept: 'application/vnd.api+json', Authorization: "Bearer #{access_token}"}
         end
+
+        private
+          def non_post_method?
+            action.eql?(:get) || action.eql?(:delete)
+          end
       end
     end
   end
