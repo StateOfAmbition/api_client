@@ -30,7 +30,7 @@ module Api
         def request(url='', params = {}, action= :get)
           begin
             puts "[API::Client##{action} Request] url: #{url} params: #{params}"
-            attributes = non_post_method? ? [url, authorization_params] : [url, params, authorization_params]
+            attributes = non_post_method?(action) ? [url, authorization_params] : [url, params, authorization_params]
             response = RestClient.send(action, *attributes)
             parse(response.code, response.body)
           rescue RestClient::ExceptionWithResponse => e
@@ -56,7 +56,7 @@ module Api
         end
 
         private
-          def non_post_method?
+          def non_post_method?(action)
             action.eql?(:get) || action.eql?(:delete)
           end
       end
