@@ -1,17 +1,18 @@
 module Api
   module Client
     class Resource
-      attr_reader :data, :type, :id, :attributes
+      attr_reader :data, :includes, :type, :id, :attributes
 
-      def self.parse(document)
-        data = document["data"]
+      def self.parse(document, attribute)
+        puts "[Api::Client::Resource.parse] attribute: #{attribute}"
+        attribute_data = document[attribute.to_s]
 
-        if data.is_a? Array
-          data.collect{|d| new(d)}
-        elsif data.is_a? Hash
-          [new(data)]
+        if attribute_data.is_a? Array
+          attribute_data.collect{|d| new(d)}
+        elsif attribute_data.is_a? Hash
+          [new(attribute_data)]
         else
-          puts "[Api::Client::Resource.parse] document data is not an Array or Hash: #{data.class.name} #{data.inspect}"
+          puts "[Api::Client::Resource.parse] document['attribute'] is not an Array or Hash"
           []
         end
       end

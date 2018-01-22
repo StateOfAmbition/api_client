@@ -44,8 +44,8 @@ module Api
 
         def parse(status, body)
           begin
-            data = JSON.parse(body)
-            Response.new(status, Resource.parse(data))
+            document = JSON.parse(body)
+            Response.new(status, Resource.parse(document, :data), Resource.parse(document, :included))
           rescue JSON::ParserError => e
             body
           end
