@@ -4,7 +4,6 @@ module Api
       attr_reader :data, :includes, :type, :id, :attributes
 
       def self.parse(document, attribute)
-        puts "[Api::Client::Resource.parse] attribute: #{attribute}"
         attribute_data = document[attribute.to_s]
 
         if attribute_data.is_a? Array
@@ -12,7 +11,6 @@ module Api
         elsif attribute_data.is_a? Hash
           [new(attribute_data)]
         else
-          puts "[Api::Client::Resource.parse] document['attribute'] is not an Array or Hash"
           []
         end
       end

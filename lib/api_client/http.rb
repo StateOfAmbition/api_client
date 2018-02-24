@@ -45,7 +45,9 @@ module Api
         def parse(status, body)
           begin
             document = JSON.parse(body)
-            Response.new(status, Resource.parse(document, :data), Resource.parse(document, :included))
+            Response.new(status, Resource.parse(document, :data), Resource.parse(document, :included)).tap do |r|
+              puts "[API::Client] Response: status #{r.status} data: #{r.data.inspect}" if log_response?
+            end
           rescue JSON::ParserError => e
             body
           end
@@ -58,6 +60,10 @@ module Api
         private
           def non_post_method?(action)
             action.eql?(:get) || action.eql?(:delete)
+          end
+
+          def log_response?
+            !Rails.env.production?
           end
       end
     end
