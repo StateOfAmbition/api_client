@@ -20,11 +20,11 @@ module Api
         end
 
         def token_expired?
-          access_token_expires_at && access_token_expires_at < Time.now
+          access_token_expires_at.nil? || (access_token_expires_at && access_token_expires_at < Time.now)
         end
 
         def generate_token
-          raise "must be overridden"
+          raise "api client must implement #generate_token"
         end
 
         def access_token
