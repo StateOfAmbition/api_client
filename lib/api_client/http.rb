@@ -49,7 +49,7 @@ module Api
               puts "[API::Client] Response: status #{r.status} data: #{r.data.inspect}" if log_response?
             end
           rescue JSON::ParserError => e
-            body
+            Response.new(status, body)
           end
         end
 
