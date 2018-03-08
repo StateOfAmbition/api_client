@@ -2,8 +2,8 @@ module Api
   module Client
     module Core
       def self.included(base)
-        attr_reader :base_endpoint, :client_id, :client_secret, :access_token
-        attr_accessor :access_token_expires_at
+        attr_reader :base_endpoint, :client_id, :client_secret
+        attr_accessor :access_token_expires_at, :access_token
 
         def initialize(config={})
           config = default_config.merge(config)
