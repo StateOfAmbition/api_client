@@ -54,7 +54,7 @@ module Api
         end
 
         def authorization_params
-          {accept: 'application/vnd.api+json', Authorization: "Bearer #{access_token}"}
+          {Authorization: "Bearer #{access_token}"}
         end
 
         private

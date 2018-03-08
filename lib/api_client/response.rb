@@ -18,11 +18,11 @@ module Api
       end
 
       def resources
-        @resources ||= data.is_a?(Array) ? data : []
+        @resources ||= data.is_a?(Array) ? data : [data]
       end
 
       def resource
-        @resource ||= data.is_a?(Array) ? data.first : nil
+        @resource ||= data.is_a?(Array) ? data.first : data
       end
     end
   end
