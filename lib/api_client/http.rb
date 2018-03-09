@@ -32,20 +32,20 @@ module Api
             puts "[API::Client##{action} Request] url: #{url} params: #{params}"
             attributes = non_post_method?(action) ? [url, header_params] : [url, params, header_params]
             response = RestClient.send(action, *attributes)
-            parse(response.code, response.body)
+            parse(response)
           rescue RestClient::ExceptionWithResponse => e
             puts "[API::Client##{action}] ERROR: #{e.inspect} #{e.response.request.url} #{header_params.inspect} #{params.inspect} #{e.response.body}"
-            parse(e.response.code, e.response.body)
+            parse(e.response)
           rescue Exception => e
             puts "[API::Client##{action}] ERROR: #{e.inspect}"
             raise e
           end
         end
 
-        def parse(status, body)
+        def parse(response)
           begin
-            document = JSON.parse(body)
-            Response.new(status, Resource.parse(document, :data), Resource.parse(document, :included)).tap do |r|
+            document = JSON.parse(response.body)
+            Response.new(status, response.headers, Resource.parse(document, :data), Resource.parse(document, :included)).tap do |r|
               puts "[API::Client] Response: status #{r.status} data: #{r.data.inspect}" if log_response?
             end
           rescue JSON::ParserError => e

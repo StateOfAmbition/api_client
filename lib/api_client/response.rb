@@ -1,10 +1,11 @@
 module Api
   module Client
     class Response
-      attr_reader :status, :data, :included
+      attr_reader :status, :headers, :data, :included
 
-      def initialize(status, data, included = [])
+      def initialize(status, headers, data, included = [])
         @status = status
+        @headers = headers
         @data = data
         @included = included
       end
