@@ -18,7 +18,7 @@ module Api
       end
 
       def resources
-        @resources ||= data.is_a?(Array) ? data : [data]
+        @resources ||= data.is_a?(Array) ? data : []
       end
 
       def resource

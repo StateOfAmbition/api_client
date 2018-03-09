@@ -2,6 +2,7 @@ module Api
   module Client
     module Http
       def self.included(base)
+        attr_accessor content_type
 
         def delete(path)
           authenticate do
@@ -30,11 +31,11 @@ module Api
         def request(url='', params = {}, action= :get)
           begin
             puts "[API::Client##{action} Request] url: #{url} params: #{params}"
-            attributes = non_post_method?(action) ? [url, authorization_params] : [url, params, authorization_params]
+            attributes = non_post_method?(action) ? [url, header_params] : [url, params, header_params]
             response = RestClient.send(action, *attributes)
             parse(response.code, response.body)
           rescue RestClient::ExceptionWithResponse => e
-            puts "[API::Client##{action}] ERROR: #{e.inspect} #{e.response.request.url} #{authorization_params.inspect} #{params.inspect} #{e.response.body}"
+            puts "[API::Client##{action}] ERROR: #{e.inspect} #{e.response.request.url} #{header_params.inspect} #{params.inspect} #{e.response.body}"
             parse(e.response.code, e.response.body)
           rescue Exception => e
             puts "[API::Client##{action}] ERROR: #{e.inspect}"
@@ -53,11 +54,16 @@ module Api
           end
         end
 
-        def authorization_params
-          {Authorization: "Bearer #{access_token}"}
+        def header_params
+          {"Content-Type" => content_type, Authorization: "Bearer #{access_token}"}
         end
 
         private
+
+          def content_type
+            "application/vnd.api+json"
+          end
+
           def non_post_method?(action)
             action.eql?(:get) || action.eql?(:delete)
           end
