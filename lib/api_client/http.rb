@@ -2,7 +2,7 @@ module Api
   module Client
     module Http
       def self.included(base)
-        attr_accessor content_type
+        attr_accessor :content_type
 
         def delete(path)
           authenticate do
