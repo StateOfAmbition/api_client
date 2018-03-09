@@ -2,7 +2,6 @@ module Api
   module Client
     module Http
       def self.included(base)
-        attr_accessor :content_type
 
         def delete(path)
           authenticate do
@@ -55,14 +54,10 @@ module Api
         end
 
         def header_params
-          {"Content-Type" => content_type, Authorization: "Bearer #{access_token}"}
+          {Authorization: "Bearer #{access_token}"}
         end
 
         private
-
-          def content_type
-            "application/vnd.api+json"
-          end
 
           def non_post_method?(action)
             action.eql?(:get) || action.eql?(:delete)
