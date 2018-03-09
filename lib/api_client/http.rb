@@ -45,11 +45,11 @@ module Api
         def parse(response)
           begin
             document = JSON.parse(response.body)
-            Response.new(response.status, response.headers, Resource.parse(document, :data), Resource.parse(document, :included)).tap do |r|
+            Response.new(response.code, response.headers, Resource.parse(document, :data), Resource.parse(document, :included)).tap do |r|
               puts "[API::Client] Response: status #{r.status} data: #{r.data.inspect}" if log_response?
             end
           rescue JSON::ParserError => e
-            Response.new(response.status, response.body)
+            Response.new(response.code, response.headers, response.body)
           end
         end
 
