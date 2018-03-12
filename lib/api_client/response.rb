@@ -5,7 +5,7 @@ module Api
 
       def initialize(status, headers, data, included = [])
         @status = status
-        @headers = headers
+        @headers = status
         @data = data
         @included = included
       end
