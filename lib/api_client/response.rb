@@ -15,7 +15,7 @@ module Api
       end
 
       def error
-        ![200,201].include?(status)
+        ![200,201,204].include?(status)
       end
 
       def resources
