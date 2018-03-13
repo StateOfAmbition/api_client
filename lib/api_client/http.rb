@@ -29,15 +29,15 @@ module Api
 
         def request(url='', params = {}, action= :get)
           begin
-            puts "[API::Client##{action} Request] url: #{url} params: #{params}"
+            Api::Client.logger.info "[API::Client##{action} Request] url: #{url} params: #{params}"
             attributes = non_post_method?(action) ? [url, header_params] : [url, params, header_params]
             response = RestClient.send(action, *attributes)
             parse(response)
           rescue RestClient::ExceptionWithResponse => e
-            puts "[API::Client##{action}] ERROR: #{e.inspect} #{e.response.request.url} #{header_params.inspect} #{params.inspect} #{e.response.body}"
+            Api::Client.logger.info "[API::Client##{action}] ERROR: #{e.inspect} #{e.response.request.url} #{header_params.inspect} #{params.inspect} #{e.response.body}"
             parse(e.response)
           rescue Exception => e
-            puts "[API::Client##{action}] ERROR: #{e.inspect}"
+            Api::Client.logger.info "[API::Client##{action}] ERROR: #{e.inspect}"
             raise e
           end
         end
@@ -46,7 +46,7 @@ module Api
           begin
             document = JSON.parse(response.body)
             Response.new(response.code, response.headers, Resource.parse(document, :data), Resource.parse(document, :included)).tap do |r|
-              puts "[API::Client] Response: status #{r.status} data: #{r.data.inspect}" if log_response?
+              Api::Client.logger.info "[API::Client] Response: status #{r.status} data: #{r.data.inspect}" if log_response?
             end
           rescue JSON::ParserError => e
             Response.new(response.code, response.headers, response.body)
@@ -64,7 +64,7 @@ module Api
           end
 
           def log_response?
-            !Rails.env.production?
+            Api::Client.config.logger_active
           end
       end
     end
