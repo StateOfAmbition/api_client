@@ -11,7 +11,9 @@ module Api
 
         def get(path, params={})
           authenticate do
-            request("#{base_endpoint}/#{path}", params)
+            path = "#{base_endpoint}/#{path}"
+            path = params.empty? ? path : "#{path}?#{params.join("&")}"
+            request("#{base_endpoint}/#{path}")
           end
         end
 
