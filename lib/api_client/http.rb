@@ -65,7 +65,7 @@ module Api
           end
 
           def logger_active?
-            Api::Client.config.logger_active
+            Api::Client.config.logger_active == "true"
           end
       end
     end
