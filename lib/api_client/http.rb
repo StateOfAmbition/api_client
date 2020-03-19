@@ -30,7 +30,7 @@ module Api
 
         def request(url='', params = {}, action= :get)
           begin
-            Api::Client.logger.info "[API::Client##{action} Request] url: #{url} params: #{params}"
+            Api::Client.logger.info "[API::Client##{action} Request] url: #{url} params: #{params}" if logger_active?
             attributes = non_post_method?(action) ? [url, header_params] : [url, params, header_params]
             response = RestClient.send(action, *attributes)
             parse(response)
@@ -47,7 +47,7 @@ module Api
           begin
             document = JSON.parse(response.body)
             Response.new(response.code, response.headers, Resource.parse(document, :data), Resource.parse(document, :included)).tap do |r|
-              Api::Client.logger.info "[API::Client] Response: status #{r.status} data: #{r.data.inspect}" if log_response?
+              Api::Client.logger.info "[API::Client] Response: status #{r.status} data: #{r.data.inspect}" if logger_active?
             end
           rescue JSON::ParserError => e
             Response.new(response.code, response.headers, response.body)
@@ -64,7 +64,7 @@ module Api
             action.eql?(:get) || action.eql?(:delete)
           end
 
-          def log_response?
+          def logger_active?
             Api::Client.config.logger_active
           end
       end
