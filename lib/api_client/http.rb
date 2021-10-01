@@ -38,7 +38,7 @@ module Api
             Api::Client.logger.info "[API::Client##{action}] ERROR: #{e.inspect} #{e.response.request.url} #{header_params.inspect} #{params.inspect} #{e.response.body}"
             parse(e.response)
           rescue Exception => e
-            Api::Client.logger.info "[API::Client##{action}] ERROR: #{e.inspect}"
+            Api::Client.logger.info "[API::Client##{action}] ERROR: #{e.inspect} url: #{url} params: #{params}"
             raise e
           end
         end
