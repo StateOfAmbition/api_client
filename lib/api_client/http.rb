@@ -32,7 +32,7 @@ module Api
           begin
             Api::Client.logger.info "[API::Client##{action} Request] url: #{url} payload: #{payload}" if logger_active?
             attributes = non_post_method?(action) ? {action: action, url: url, header_params: header_params} : {action: action, url: url, payload: payload, header_params: header_params}
-            response = RestClient::Request.exectue(attributes.merge({verify_ssl: verify_ssl}))
+            response = RestClient::Request.execute(attributes.merge({verify_ssl: verify_ssl}))
             parse(response)
           rescue RestClient::ExceptionWithResponse => e
             Api::Client.logger.info "[API::Client##{action}] ERROR: #{e.inspect} #{e.response.request.url} #{header_params.inspect} #{payload.inspect} #{e.response.body}"
