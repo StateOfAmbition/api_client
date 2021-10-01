@@ -31,7 +31,7 @@ module Api
         def request(url='', payload = {}, action= :get)
           begin
             Api::Client.logger.info "[API::Client##{action} Request] url: #{url} payload: #{payload}" if logger_active?
-            attributes = non_post_method?(action) ? {action: action, url: url, header_params: header_params} : {action: action, url: url, payload: payload, header_params: header_params}
+            attributes = non_post_method?(action) ? {method: action, url: url, header_params: header_params} : {method: action, url: url, payload: payload, header_params: header_params}
             response = RestClient::Request.execute(attributes.merge({verify_ssl: verify_ssl}))
             parse(response)
           rescue RestClient::ExceptionWithResponse => e
