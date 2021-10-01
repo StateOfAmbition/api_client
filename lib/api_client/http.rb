@@ -9,36 +9,36 @@ module Api
           end
         end
 
-        def get(path, params={})
+        def get(path, payload={})
           authenticate do
-            path = params.empty? ? path : "#{path}?#{params.map{|k,v| "#{k}=#{v}"}.join('&')}"
+            path = payload.empty? ? path : "#{path}?#{payload.map{|k,v| "#{k}=#{v}"}.join('&')}"
             request("#{base_endpoint}/#{path}")
           end
         end
 
-        def post(path, params={})
+        def post(path, payload={})
           authenticate do
-            request("#{base_endpoint}/#{path}", params, :post)
+            request("#{base_endpoint}/#{path}", payload, :post)
           end
         end
 
-        def patch(path, params={})
+        def patch(path, payload={})
           authenticate do
-            request("#{base_endpoint}/#{path}", params, :patch)
+            request("#{base_endpoint}/#{path}", payload, :patch)
           end
         end
 
-        def request(url='', params = {}, action= :get)
+        def request(url='', payload = {}, action= :get)
           begin
-            Api::Client.logger.info "[API::Client##{action} Request] url: #{url} params: #{params}" if logger_active?
-            attributes = non_post_method?(action) ? [url, header_params] : [url, params, header_params]
-            response = RestClient.send(action, *attributes)
+            Api::Client.logger.info "[API::Client##{action} Request] url: #{url} payload: #{payload}" if logger_active?
+            attributes = non_post_method?(action) ? {action: action, url: url, header_params: header_params} : {action: action, url: url, payload: payload, header_params: header_params}
+            response = RestClient::Request.exectue(attributes.merge({verify_ssl: verify_ssl}))
             parse(response)
           rescue RestClient::ExceptionWithResponse => e
-            Api::Client.logger.info "[API::Client##{action}] ERROR: #{e.inspect} #{e.response.request.url} #{header_params.inspect} #{params.inspect} #{e.response.body}"
+            Api::Client.logger.info "[API::Client##{action}] ERROR: #{e.inspect} #{e.response.request.url} #{header_params.inspect} #{payload.inspect} #{e.response.body}"
             parse(e.response)
           rescue Exception => e
-            Api::Client.logger.info "[API::Client##{action}] ERROR: #{e.inspect} url: #{url} params: #{params}"
+            Api::Client.logger.info "[API::Client##{action}] ERROR: #{e.inspect} url: #{url} payload: #{payload}"
             raise e
           end
         end

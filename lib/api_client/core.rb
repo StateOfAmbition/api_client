@@ -35,6 +35,10 @@ module Api
           @base_endpoint || Api::Client.base_endpoint
         end
 
+        def verify_ssl
+          @verify_ssl || Api::Client.verify_ssl
+        end
+
         private
 
           def default_config
